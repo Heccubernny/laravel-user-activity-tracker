@@ -17,13 +17,17 @@ class LogRouteActivity
             $user = Auth::guard('api')->user() ?? Auth::guard('web')->user();
 
 
+
+            $subjectId = null;
+            $subjectType = null;
+            $subjectAttributes = [];
+
             if ($subject && is_object($subject)) {
                 $subjectId = $subject->getKey();
                 $subjectType = get_class($subject);
-            } else {
-                $subjectId = null;
-                $subjectType = null;
+                $subjectAttributes = $subject->getAttributes();
             }
+
 
             Activity::create([
                 'user_id' => $user?->id, //$user?->getKey()
@@ -31,10 +35,13 @@ class LogRouteActivity
                 'subject_id' => $subjectId,
                 'subject_type' => $subjectType,
                 'name' => $name ?? $request->route()?->getName() ?? $request->method().' '.$request->path(),
-                'description' => 'Visited route: '.$request->path(),
+                'description' => $subject
+                    ? 'Activity on ' . class_basename($subject)
+                    : 'Visited route: ' . $request->path(),
                 'properties' => [
                     'status' => $response->getStatusCode(),
-                    'request' => $request->except(array_keys(config('activitytracker.ignore_attributes', [])))
+                    'request' => $request->except(array_keys(config('activitytracker.ignore_attributes', []))),
+                    'subject_attributes' => $subjectAttributes
                 ],
                 'ip_address' => $request->ip(),
                 'url' => $request->fullUrl(),
