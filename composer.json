@@ -1,0 +1,34 @@
+{
+  "name": "heccubernny/activity-tracker",
+  "description": "A lightweight Laravel package to track user and model activities",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Ikubanni Paul",
+      "email": "ikubannipaul@gmail.com"
+    }
+  ],
+  "require": {
+    "php": ">=8.0",
+    "illuminate/support": "^8.0|^9.0|^10.0|^11.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Heccubernny\\ActivityTracker\\": "src/"
+    },
+    "files": [
+      "src/helpers.php"
+    ]
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Heccubernny\\ActivityTracker\\ActivityServiceProvider"
+      ],
+      "aliases": {
+        "ActivityTracker": "Heccubernny\\ActivityTracker\\Facades\\ActivityTracker"
+      }
+    }
+  }
+}
